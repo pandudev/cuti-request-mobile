@@ -18,6 +18,7 @@ dependencies:
   flutter_rounded_date_picker: ^1.0.4
   cupertino_icons: ^0.1.3
   provider: ^4.3.1
+  firebase_core: ^0.4.5
   firebase_database: ^3.1.6
   firebase_auth: ^0.16.1
   firebase_storage: ^3.1.6

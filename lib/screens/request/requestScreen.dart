@@ -15,10 +15,7 @@ class RequestScreen extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: ListView(
-              padding: EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 40,
-              ),
+              padding: EdgeInsets.all(20),
               children: <Widget>[
                 Column(
                   children: <Widget>[

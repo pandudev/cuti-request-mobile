@@ -7,7 +7,7 @@ class RequestCard extends StatelessWidget {
       child: InkWell(
         onTap: () {},
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -26,6 +26,54 @@ class RequestCard extends StatelessWidget {
               Wrap(
                 runSpacing: 5,
                 children: <Widget>[
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          'NIP',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          ': 123423423',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          'Nama',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          ': Abdul Kadir',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -113,7 +161,7 @@ class RequestCard extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          ': Izin berobat ke luar negeri karena sakit tahunan sudah lama sekali semenjak kecil',
+                          ': Izin berobat ke luar negeri',
                           style: TextStyle(
                             fontSize: 16,
                             fontFamily: 'Montserrat',

@@ -15,10 +15,7 @@ class SettingScreen extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: ListView(
-              padding: EdgeInsets.symmetric(
-                vertical: 40,
-                horizontal: 20,
-              ),
+              padding: EdgeInsets.all(20),
               children: <Widget>[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

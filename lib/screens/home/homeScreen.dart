@@ -1,5 +1,6 @@
 import 'package:cuti_flutter_mobile/screens/home/localWidgets/profileAvatar.dart';
 import 'package:cuti_flutter_mobile/screens/home/localWidgets/profileInfo.dart';
+import 'package:cuti_flutter_mobile/screens/home/localWidgets/requestNotification.dart';
 import 'package:cuti_flutter_mobile/widgets/customDrawer.dart';
 import 'package:flutter/material.dart';
 
@@ -17,9 +18,19 @@ class HomeScreen extends StatelessWidget {
           Text(
             'Selamat Datang',
             style: TextStyle(
-                fontSize: 20,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold),
+              fontSize: 20,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            'Direktur',
+            style: TextStyle(
+              fontSize: 20,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).accentColor,
+            ),
           ),
           SizedBox(
             height: 20,
@@ -50,7 +61,8 @@ class HomeScreen extends StatelessWidget {
           SizedBox(
             height: 40,
           ),
-          ProfileInfo()
+          // ProfileInfo(),
+          RequestNotification(),
         ],
       ),
     );
