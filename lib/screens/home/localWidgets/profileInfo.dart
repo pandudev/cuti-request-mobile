@@ -1,6 +1,11 @@
+import 'package:cuti_flutter_mobile/models/penggunaModel.dart';
 import 'package:flutter/material.dart';
 
 class ProfileInfo extends StatelessWidget {
+  ProfileInfo(this._pengguna);
+
+  final Pengguna _pengguna;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -9,6 +14,29 @@ class ProfileInfo extends StatelessWidget {
         direction: Axis.horizontal,
         runSpacing: 5,
         children: <Widget>[
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  'NIP',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  ': ' + _pengguna.nip.toString(),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Montserrat',
+                  ),
+                ),
+              ),
+            ],
+          ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -23,7 +51,7 @@ class ProfileInfo extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  ': Admin',
+                  ': ' + _pengguna.jabatan.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Montserrat',
@@ -46,7 +74,7 @@ class ProfileInfo extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  ': Perempuan',
+                  ': ' + _pengguna.jenisKelamin.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Montserrat',
@@ -69,7 +97,7 @@ class ProfileInfo extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  ': 0822 2222 2222',
+                  ': ' + _pengguna.telepon.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Montserrat',

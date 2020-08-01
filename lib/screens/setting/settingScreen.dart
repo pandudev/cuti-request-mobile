@@ -9,7 +9,7 @@ class SettingScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('PENGATURAN AKUN'),
       ),
-      drawer: CustomDrawer(),
+      drawer: CustomDrawer(false),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

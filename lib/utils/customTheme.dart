@@ -32,10 +32,10 @@ class CustomTheme {
         elevation: 12,
       ),
       snackBarTheme: SnackBarThemeData(
-        behavior: SnackBarBehavior.floating,
-        actionTextColor: Colors.white,
-        backgroundColor: _red,
-      ),
+          // behavior: SnackBarBehavior.floating,
+          actionTextColor: Colors.white,
+          backgroundColor: _red,
+          contentTextStyle: TextStyle(fontSize: 18)),
     );
   }
 }

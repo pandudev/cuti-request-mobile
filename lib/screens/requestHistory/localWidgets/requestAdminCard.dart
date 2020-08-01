@@ -1,14 +1,45 @@
+import 'package:cuti_flutter_mobile/models/penggunaModel.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class RequestCard extends StatelessWidget {
+class RequestAdminCard extends StatefulWidget {
   final dynamic data;
-  RequestCard(this.data);
+  RequestAdminCard(this.data);
+
+  @override
+  _RequestAdminCardState createState() => _RequestAdminCardState();
+}
+
+class _RequestAdminCardState extends State<RequestAdminCard> {
+  Pengguna _pengguna = Pengguna();
+
+  void getPengguna() async {
+    FirebaseDatabase.instance
+        .reference()
+        .child('pengguna')
+        .child(widget.data['penggunaId'])
+        .once()
+        .then((DataSnapshot snapshot) => {
+              setState(() {
+                _pengguna.uid = snapshot.key;
+                _pengguna.nip = snapshot.value['nip'];
+                _pengguna.nama = snapshot.value['nama'];
+              })
+            });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getPengguna();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
+        onTap: () {},
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -16,10 +47,8 @@ class RequestCard extends StatelessWidget {
             children: <Widget>[
               Text(
                 DateFormat('dd/MM/yyyy').format(
-                  DateTime.fromMillisecondsSinceEpoch(
-                    data['tanggalPengajuan'],
-                  ),
-                ),
+                    DateTime.fromMillisecondsSinceEpoch(
+                        widget.data['tanggalPengajuan'])),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -39,7 +68,7 @@ class RequestCard extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          'Tanggal Cuti',
+                          'NIP',
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -48,15 +77,9 @@ class RequestCard extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          ': ' +
-                              DateFormat('dd/MM/yyyy').format(
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                      data['tanggalMulaiCuti'])) +
-                              ' - ' +
-                              DateFormat('dd/MM/yyyy')
-                                  .format(DateTime.fromMillisecondsSinceEpoch(
-                                      data['tanggalSelesaiCuti']))
-                                  .toString(),
+                          _pengguna.nip != null
+                              ? ': ' + _pengguna.nip.toString()
+                              : ': ',
                           style: TextStyle(
                             fontSize: 16,
                             fontFamily: 'Montserrat',
@@ -71,7 +94,7 @@ class RequestCard extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          'Jenis Cuti',
+                          'Nama',
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -80,7 +103,9 @@ class RequestCard extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          ': ' + data['jenisCuti'],
+                          _pengguna.nama != null
+                              ? ': ' + _pengguna.nama.toString()
+                              : ': ',
                           style: TextStyle(
                             fontSize: 16,
                             fontFamily: 'Montserrat',
@@ -105,10 +130,10 @@ class RequestCard extends StatelessWidget {
                         flex: 2,
                         child: Text(
                           DateTime.fromMillisecondsSinceEpoch(
-                                      data['tanggalSelesaiCuti'])
+                                      widget.data['tanggalSelesaiCuti'])
                                   .difference(
                                       DateTime.fromMillisecondsSinceEpoch(
-                                          data['tanggalMulaiCuti']))
+                                          widget.data['tanggalMulaiCuti']))
                                   .inDays
                                   .toString() +
                               " hari",
@@ -135,7 +160,7 @@ class RequestCard extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          ': ' + data['keterangan'],
+                          ': ' + widget.data['keterangan'].toString(),
                           style: TextStyle(
                             fontSize: 16,
                             fontFamily: 'Montserrat',
@@ -159,17 +184,18 @@ class RequestCard extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          ': ' + data['statusCuti'].toString().toUpperCase(),
+                          ': ' +
+                              widget.data['statusCuti']
+                                  .toString()
+                                  .toUpperCase(),
                           style: TextStyle(
                             fontSize: 16,
                             fontFamily: 'Montserrat',
                             fontWeight: FontWeight.w700,
-                            color: (data['statusCuti'].toString() ==
-                                    'menunggu konfirmasi'
-                                ? Colors.orangeAccent
-                                : data['statusCuti'].toString() == 'ditolak'
-                                    ? Theme.of(context).accentColor
-                                    : Colors.green),
+                            color: (widget.data['statusCuti'].toString() ==
+                                    'ditolak'
+                                ? Theme.of(context).accentColor
+                                : Colors.green),
                           ),
                         ),
                       ),

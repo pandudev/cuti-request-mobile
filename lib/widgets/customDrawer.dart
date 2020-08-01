@@ -1,11 +1,17 @@
 import 'package:cuti_flutter_mobile/screens/home/homeScreen.dart';
-import 'package:cuti_flutter_mobile/screens/login/loginScreen.dart';
 import 'package:cuti_flutter_mobile/screens/request/requestScreen.dart';
+import 'package:cuti_flutter_mobile/screens/requestHistory/requestHistoryAdminScreen.dart';
 import 'package:cuti_flutter_mobile/screens/requestHistory/requestHistoryScreen.dart';
+import 'package:cuti_flutter_mobile/screens/root/rootScreen.dart';
 import 'package:cuti_flutter_mobile/screens/setting/settingScreen.dart';
+import 'package:cuti_flutter_mobile/states/penggunaState.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CustomDrawer extends StatelessWidget {
+  CustomDrawer(this._isDirektur);
+  final bool _isDirektur;
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -39,10 +45,45 @@ class CustomDrawer extends StatelessWidget {
             shrinkWrap: true,
             children: <Widget>[
               NavItem('Home', Icons.home, HomeScreen()),
-              NavItem('Pengajuan Cuti', Icons.create, RequestScreen()),
-              NavItem('Informasi Cuti', Icons.history, RequestHistoryScreen()),
+              _isDirektur
+                  ? NavItem('Data Pengajuan Cuti', Icons.history,
+                      RequestHistoryAdminScreen())
+                  : Column(
+                      children: <Widget>[
+                        NavItem(
+                            'Pengajuan Cuti', Icons.create, RequestScreen()),
+                        NavItem('Informasi Cuti', Icons.history,
+                            RequestHistoryScreen()),
+                      ],
+                    ),
               NavItem('Pengaturan', Icons.settings, SettingScreen()),
-              NavItem('Logout', Icons.exit_to_app, LoginScreen()),
+              ListTile(
+                  leading: Icon(
+                    Icons.exit_to_app,
+                    size: 30,
+                  ),
+                  title: Text(
+                    'Logout',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  onTap: () async {
+                    PenggunaState _penggunaState = Provider.of<PenggunaState>(
+                      context,
+                      listen: false,
+                    );
+                    String _returnString = await _penggunaState.signOut();
+                    if (_returnString == 'success') {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => RootScreen(),
+                          ),
+                          (route) => false);
+                    }
+                    // Navigator.pushNamed(context, route);
+                  })
             ],
           ),
         ],
@@ -68,13 +109,13 @@ class NavItem extends StatelessWidget {
         leading: Icon(
           icon,
           size: 30,
-          color: Theme.of(context).accentColor,
+          // color: Theme.of(context).accentColor,
         ),
         title: Text(
           name,
           style: TextStyle(
             fontSize: 18,
-            color: Theme.of(context).accentColor,
+            // color: Theme.of(context).accentColor,
           ),
         ),
         onTap: () {

@@ -1,5 +1,7 @@
+import 'package:firebase_database/firebase_database.dart';
+
 class Pengguna {
-  String key;
+  String uid;
   String nip;
   String nama;
   String jenisKelamin;
@@ -9,7 +11,7 @@ class Pengguna {
   String role;
 
   Pengguna(
-      {this.key,
+      {this.uid,
       this.nip,
       this.nama,
       this.jenisKelamin,
@@ -17,4 +19,15 @@ class Pengguna {
       this.email,
       this.jabatan,
       this.role});
+
+  Pengguna.fromSnapshot(DataSnapshot snapshot) {
+    uid = snapshot.key;
+    nip = snapshot.value['nip'];
+    nama = snapshot.value['nama'];
+    jenisKelamin = snapshot.value['jenisKelamin'];
+    telepon = snapshot.value['telepon'];
+    email = snapshot.value['email'];
+    jabatan = snapshot.value['jabatan'];
+    role = snapshot.value['role'];
+  }
 }
