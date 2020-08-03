@@ -34,7 +34,6 @@ class _RequestFormState extends State<RequestForm> with Validation {
 
   void submit() async {
     if (formKey.currentState.validate()) {
-      print(_jenisCuti);
       formKey.currentState.save();
 
       _pengajuan.tanggalPengajuan = DateTime.now().millisecondsSinceEpoch;
