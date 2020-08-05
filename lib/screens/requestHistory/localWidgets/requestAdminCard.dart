@@ -46,9 +46,10 @@ class _RequestAdminCardState extends State<RequestAdminCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                DateFormat('dd/MM/yyyy').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        widget.data['tanggalPengajuan'])),
+                DateFormat('dd MMMM yyyy, hh:mm', 'id').format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                            widget.data['tanggalPengajuan'])) +
+                    ' WIB',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -129,7 +130,8 @@ class _RequestAdminCardState extends State<RequestAdminCard> {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          DateTime.fromMillisecondsSinceEpoch(
+                          ': ' +
+                              DateTime.fromMillisecondsSinceEpoch(
                                       widget.data['tanggalSelesaiCuti'])
                                   .difference(
                                       DateTime.fromMillisecondsSinceEpoch(

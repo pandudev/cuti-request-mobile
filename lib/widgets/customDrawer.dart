@@ -9,8 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CustomDrawer extends StatelessWidget {
-  CustomDrawer(this._isDirektur);
+  CustomDrawer(this._isDirektur, this._activeScreen);
   final bool _isDirektur;
+  final String _activeScreen;
 
   @override
   Widget build(BuildContext context) {
@@ -44,19 +45,20 @@ class CustomDrawer extends StatelessWidget {
           ListView(
             shrinkWrap: true,
             children: <Widget>[
-              NavItem('Home', Icons.home, HomeScreen()),
+              NavItem('Home', Icons.home, HomeScreen(), _activeScreen),
               _isDirektur
                   ? NavItem('Data Pengajuan Cuti', Icons.history,
-                      RequestHistoryAdminScreen())
+                      RequestHistoryAdminScreen(), _activeScreen)
                   : Column(
                       children: <Widget>[
-                        NavItem(
-                            'Pengajuan Cuti', Icons.create, RequestScreen()),
+                        NavItem('Pengajuan Cuti', Icons.create, RequestScreen(),
+                            _activeScreen),
                         NavItem('Informasi Cuti', Icons.history,
-                            RequestHistoryScreen()),
+                            RequestHistoryScreen(), _activeScreen),
                       ],
                     ),
-              NavItem('Pengaturan', Icons.settings, SettingScreen()),
+              NavItem('Pengaturan Akun', Icons.settings, SettingScreen(),
+                  _activeScreen),
               ListTile(
                   leading: Icon(
                     Icons.exit_to_app,
@@ -97,11 +99,13 @@ class NavItem extends StatelessWidget {
     this.name,
     this.icon,
     this.screen,
+    this.active,
   );
 
   final String name;
   final IconData icon;
   final Widget screen;
+  final String active;
 
   @override
   Widget build(BuildContext context) {
@@ -109,13 +113,13 @@ class NavItem extends StatelessWidget {
         leading: Icon(
           icon,
           size: 30,
-          // color: Theme.of(context).accentColor,
+          color: name == active ? Theme.of(context).accentColor : null,
         ),
         title: Text(
           name,
           style: TextStyle(
             fontSize: 18,
-            // color: Theme.of(context).accentColor,
+            color: name == active ? Theme.of(context).accentColor : null,
           ),
         ),
         onTap: () {

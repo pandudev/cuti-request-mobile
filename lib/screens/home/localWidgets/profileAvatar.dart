@@ -16,6 +16,60 @@ class ProfileAvatar extends StatefulWidget {
 
 class _ProfileAvatarState extends State<ProfileAvatar> {
   String photoUrl = "";
+  dynamic imageFile;
+
+  Future<void> _showSelectionDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: Text("Gallery"),
+                  onTap: () {
+                    _openGallery(context);
+                  },
+                ),
+                Padding(padding: EdgeInsets.all(12.0)),
+                GestureDetector(
+                  child: Text("Camera"),
+                  onTap: () {
+                    _openCamera(context);
+                  },
+                )
+              ],
+            ),
+          ));
+        });
+  }
+
+  void _openGallery(BuildContext context) async {
+    var picture = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (picture == null) {
+      return;
+    } else {
+      this.setState(() {
+        imageFile = picture;
+      });
+      upload();
+    }
+    Navigator.of(context).pop();
+  }
+
+  void _openCamera(BuildContext context) async {
+    var picture = await ImagePicker.pickImage(source: ImageSource.camera);
+    if (picture == null) {
+      return;
+    } else {
+      this.setState(() {
+        imageFile = picture;
+      });
+      upload();
+    }
+    Navigator.of(context).pop();
+  }
 
   Future<void> getPhotoUrl() async {
     StorageReference ref = FirebaseStorage.instance
@@ -33,15 +87,10 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
   }
 
   Future<void> upload() async {
-    final image = await ImagePicker.pickImage(source: ImageSource.camera);
-    if (image == null) {
-      return;
-    }
-
     String filename = widget._pengguna.uid;
     StorageReference ref =
         FirebaseStorage.instance.ref().child('pengguna').child(filename);
-    StorageUploadTask uploadTask = ref.putFile(image);
+    StorageUploadTask uploadTask = ref.putFile(imageFile);
     StreamSubscription<StorageTaskEvent> streamSubscription =
         uploadTask.events.listen((event) async {
       if (event.type == StorageTaskEventType.success) {
@@ -73,7 +122,9 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
           backgroundColor: Colors.white,
           child: CircleAvatar(
             backgroundColor: Colors.white,
-            backgroundImage: photoUrl == "" ? null : NetworkImage(photoUrl),
+            backgroundImage: photoUrl == ""
+                ? AssetImage('assets/images/user.png')
+                : NetworkImage(photoUrl),
             radius: 65,
           ),
         ),
@@ -85,7 +136,7 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
             backgroundColor: Colors.white,
             child: IconButton(
               onPressed: () {
-                upload();
+                _showSelectionDialog(context);
               },
               icon: Icon(
                 Icons.camera_alt,

@@ -41,7 +41,7 @@ class _RequestScreenState extends State<RequestScreen> {
       appBar: AppBar(
         title: Text('PENGAJUAN CUTI'),
       ),
-      drawer: CustomDrawer(false),
+      drawer: CustomDrawer(false, 'Pengajuan Cuti'),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

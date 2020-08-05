@@ -1,10 +1,37 @@
 import 'package:cuti_flutter_mobile/models/penggunaModel.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-class ProfileInfo extends StatelessWidget {
+class ProfileInfo extends StatefulWidget {
   ProfileInfo(this._pengguna);
 
   final Pengguna _pengguna;
+
+  @override
+  _ProfileInfoState createState() => _ProfileInfoState();
+}
+
+class _ProfileInfoState extends State<ProfileInfo> {
+  int _cutiHamil = 0;
+  int _cutiTahunan = 0;
+  @override
+  @override
+  void initState() {
+    super.initState();
+    FirebaseDatabase.instance
+        .reference()
+        .child('cuti')
+        .child(widget._pengguna.uid)
+        .child(DateTime.now().year.toString())
+        .once()
+        .then((snap) => {
+              print(snap.value['cutiHamil']),
+              setState(() {
+                _cutiHamil = snap.value['cutiHamil'];
+                _cutiTahunan = snap.value['cutiTahunan'];
+              })
+            });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +55,7 @@ class ProfileInfo extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  ': ' + _pengguna.nip.toString(),
+                  ': ' + widget._pengguna.nip.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Montserrat',
@@ -51,7 +78,7 @@ class ProfileInfo extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  ': ' + _pengguna.jabatan.toString(),
+                  ': ' + widget._pengguna.jabatan.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Montserrat',
@@ -74,7 +101,7 @@ class ProfileInfo extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  ': ' + _pengguna.jenisKelamin.toString(),
+                  ': ' + widget._pengguna.jenisKelamin.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Montserrat',
@@ -97,7 +124,7 @@ class ProfileInfo extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  ': ' + _pengguna.telepon.toString(),
+                  ': ' + widget._pengguna.telepon.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Montserrat',
@@ -120,7 +147,7 @@ class ProfileInfo extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  ': 12 Hari',
+                  ': ' + _cutiTahunan.toString() + ' Hari',
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Montserrat',
@@ -145,7 +172,9 @@ class ProfileInfo extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  ': 90 Hari',
+                  widget._pengguna.jenisKelamin == 'perempuan'
+                      ? ': ' + _cutiHamil.toString() + ' Hari'
+                      : ': -',
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Montserrat',

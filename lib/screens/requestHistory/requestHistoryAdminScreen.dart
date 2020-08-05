@@ -20,7 +20,7 @@ class _RequestHistoryAdminScreenState extends State<RequestHistoryAdminScreen> {
       appBar: AppBar(
         title: Text('DATA PENGAJUAN CUTI'),
       ),
-      drawer: CustomDrawer(true),
+      drawer: CustomDrawer(true, 'Data Pengajuan Cuti'),
       body: StreamBuilder(
           stream: _db.onValue,
           builder: (BuildContext context, AsyncSnapshot<Event> snapshot) {

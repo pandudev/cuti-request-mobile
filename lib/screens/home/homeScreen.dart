@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text('APLIKASI CUTI'),
       ),
-      drawer: CustomDrawer(_isDirektur),
+      drawer: CustomDrawer(_isDirektur, 'Home'),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

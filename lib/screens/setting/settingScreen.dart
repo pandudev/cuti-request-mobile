@@ -34,7 +34,7 @@ class _SettingScreenState extends State<SettingScreen> {
       appBar: AppBar(
         title: Text('PENGATURAN AKUN'),
       ),
-      drawer: CustomDrawer(_isDirektur),
+      drawer: CustomDrawer(_isDirektur, 'Pengaturan Akun'),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

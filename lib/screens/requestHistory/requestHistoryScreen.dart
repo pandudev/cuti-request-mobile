@@ -58,7 +58,7 @@ class _RequestHistoryScreenState extends State<RequestHistoryScreen> {
         ],
         title: Text('INFORMASI CUTI'),
       ),
-      drawer: CustomDrawer(false),
+      drawer: CustomDrawer(false, ''),
       body: StreamBuilder(
           stream: _db.onValue,
           builder: (BuildContext context, snapshot) {
