@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:cuti_flutter_mobile/screens/requestList/requestListScreen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -10,15 +8,16 @@ class RequestNotification extends StatefulWidget {
 }
 
 class _RequestNotificationState extends State<RequestNotification> {
-  List<dynamic> _list = [];
+  int _count;
 
   Query _db = FirebaseDatabase.instance
       .reference()
       .child('pengajuan')
-      .orderByChild('tanggalPengajuan');
+      .orderByChild('tanggalPengajuan')
+      .limitToLast(400);
 
   void lihatPengajuan(context) {
-    if (_list.length > 0) {
+    if (_count > 0) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -40,10 +39,22 @@ class _RequestNotificationState extends State<RequestNotification> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    setState(() {
+      _count = 0;
+    });
     _db.onChildAdded.listen((event) {
-      print(event.snapshot.value);
+      if (event.snapshot.value['tahunCuti'] == DateTime.now().year.toString() &&
+          event.snapshot.value['statusCuti'] == 'menunggu konfirmasi') {
+        setState(() {
+          _count++;
+        });
+      }
+    });
+    _db.onChildRemoved.listen((event) {
+      setState(() {
+        _count--;
+      });
     });
   }
 
@@ -83,33 +94,13 @@ class _RequestNotificationState extends State<RequestNotification> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  StreamBuilder(
-                      stream: _db.onValue,
-                      builder: (BuildContext context, snapshot) {
-                        if (snapshot.hasData) {
-                          Map<dynamic, dynamic> map =
-                              snapshot.data.snapshot.value;
-                          _list.clear();
-                          if (map != null) {
-                            _list = map.values
-                                .where((element) =>
-                                    element['statusCuti'] ==
-                                        'menunggu konfirmasi' &&
-                                    element['tahunCuti'] ==
-                                        DateTime.now().year.toString())
-                                .toList();
-                          }
-
-                          return Text(_list.length.toString(),
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: 'Montserrat',
-                                color: Theme.of(context).accentColor,
-                                fontWeight: FontWeight.bold,
-                              ));
-                        }
-                        return Center(child: CircularProgressIndicator());
-                      }),
+                  Text(_count.toString(),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Montserrat',
+                        color: Theme.of(context).accentColor,
+                        fontWeight: FontWeight.bold,
+                      )),
                 ],
               ),
             ),

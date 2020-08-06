@@ -26,7 +26,22 @@ class _RequestHistoryScreenState extends State<RequestHistoryScreen> {
       context,
       listen: false,
     );
-
+    _list.clear();
+    _db.onChildAdded.listen((event) {
+      if (event.snapshot.value['penggunaId'] == _uid &&
+          event.snapshot.value['tahunCuti'] == DateTime.now().year.toString()) {
+        setState(() {
+          _list.add(event.snapshot.value);
+        });
+      }
+    });
+    _db.onChildRemoved.listen((event) {
+      setState(() {
+        _list.removeWhere((item) =>
+            item['tanggalPengajuan'] ==
+            event.snapshot.value['tanggalPengajuan']);
+      });
+    });
     setState(() {
       _uid = _penggunaState.getPengguna.uid;
     });
@@ -35,64 +50,44 @@ class _RequestHistoryScreenState extends State<RequestHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => RequestScreen(),
-                  ),
-                );
-              },
-              child: Icon(
-                Icons.add,
-                size: 30.0,
+        appBar: AppBar(
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => RequestScreen(),
+                    ),
+                  );
+                },
+                child: Icon(
+                  Icons.add,
+                  size: 30.0,
+                ),
               ),
-            ),
-          )
-        ],
-        title: Text('INFORMASI CUTI'),
-      ),
-      drawer: CustomDrawer(false, ''),
-      body: StreamBuilder(
-          stream: _db.onValue,
-          builder: (BuildContext context, snapshot) {
-            if (snapshot.hasData) {
-              Map<dynamic, dynamic> map = snapshot.data.snapshot.value;
-              _list.clear();
-              if (map != null) {
-                _list = map.values
-                    .where((element) =>
-                        element['penggunaId'] == _uid &&
-                        element['tahunCuti'] == DateTime.now().year.toString())
-                    .toList();
-              }
-
-              if (_list.length > 0) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _list.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: RequestCard(_list[index]),
-                        );
-                      }),
-                );
-              } else {
-                return Center(
-                  child: Text('Tidak ada data cuti'),
-                );
-              }
-            }
-            return Center(child: CircularProgressIndicator());
-          }),
-    );
+            )
+          ],
+          title: Text('INFORMASI CUTI'),
+        ),
+        drawer: CustomDrawer(false, 'Informasi Cuti'),
+        body: _list.length > 0
+            ? Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _list.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: RequestCard(_list[_list.length - (index + 1)]),
+                      );
+                    }),
+              )
+            : Center(
+                child: Text('Tidak ada data'),
+              ));
   }
 }

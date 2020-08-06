@@ -16,92 +16,70 @@ class _RequestListScreenState extends State<RequestListScreen> {
       .orderByChild('tanggalPengajuan');
 
   @override
-  void setState(fn) {
-    // TODO: implement setState
-    super.setState(fn);
-    _db.onChildAdded.listen((event) {});
+  void initState() {
+    super.initState();
+    _db.onChildAdded.listen((event) {
+      if (event.snapshot.value['tahunCuti'] == DateTime.now().year.toString() &&
+          event.snapshot.value['statusCuti'] == 'menunggu konfirmasi') {
+        setState(() {
+          _list.add(event.snapshot.value);
+        });
+      }
+    });
+    _db.onChildRemoved.listen((event) {
+      setState(() {
+        _list.removeWhere((item) =>
+            item['tanggalPengajuan'] ==
+            event.snapshot.value['tanggalPengajuan']);
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('DAFTAR PENGAJUAN CUTI'),
-      ),
-      body: StreamBuilder(
-          stream: _db.onValue,
-          builder: (BuildContext context, snapshot) {
-            if (snapshot.hasData) {
-              Map<dynamic, dynamic> map = snapshot.data.snapshot.value;
-              int i = 0;
-              map.forEach((key, value) {
-                String id =
-                    (snapshot.data.snapshot.value as Map).keys.elementAt(i);
-                map[key]['key'] = id;
-                i++;
-              });
-              _list.clear();
-
-              if (map != null) {
-                _list = map.values
-                    .where((element) =>
-                        element['statusCuti'] == 'menunggu konfirmasi' &&
-                        element['tahunCuti'] == DateTime.now().year.toString())
-                    .toList();
-              }
-
-              if (_list.length > 0) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: ListView(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                        children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  'Jumlah : ' + _list.length.toString(),
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: _list.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 0),
-                                      child:
-                                          RequestListCard(_list[index], index),
-                                    );
-                                  }),
-                            ],
+        appBar: AppBar(
+          title: Text('DAFTAR PENGAJUAN CUTI'),
+        ),
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                children: <Widget>[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'Jumlah : ' + _list.length.toString(),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              } else {
-                return Center(
-                  child: Text('Tidak ada data pengajuan cuti'),
-                );
-              }
-            }
-            return Center(child: CircularProgressIndicator());
-          }),
-    );
+                      SizedBox(
+                        height: 20,
+                      ),
+                      ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _list.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 0),
+                              child: RequestListCard(_list[index], index),
+                            );
+                          }),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ));
   }
 }

@@ -25,7 +25,6 @@ class _ProfileInfoState extends State<ProfileInfo> {
         .child(DateTime.now().year.toString())
         .once()
         .then((snap) => {
-              print(snap.value['cutiHamil']),
               setState(() {
                 _cutiHamil = snap.value['cutiHamil'];
                 _cutiTahunan = snap.value['cutiTahunan'];

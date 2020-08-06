@@ -107,8 +107,8 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
         FirebaseDatabase.instance
             .reference()
             .child('pengajuan')
-            .orderByKey()
-            .equalTo((widget._pengajuan['key']))
+            .orderByChild('tanggalPengajuan')
+            .equalTo((widget._pengajuan['tanggalPengajuan']))
             .once()
             .then(
               (DataSnapshot snapshot) => {

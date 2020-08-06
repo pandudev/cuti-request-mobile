@@ -40,7 +40,7 @@ class _MainState extends State<Main> {
   }
 
   updateToken(String token) {
-    print(token);
+    // print(token);
     setState(() {
       _token = token;
     });
