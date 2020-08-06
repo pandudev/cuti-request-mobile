@@ -21,12 +21,31 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
   bool loading = true;
   bool canCuti = false;
 
+  int getDifferenceWithoutWeekends(DateTime startDate, DateTime endDate) {
+    int nbDays = 0;
+    DateTime currentDay = startDate;
+    while (currentDay.isBefore(endDate)) {
+      currentDay = currentDay.add(Duration(days: 1));
+      if (currentDay.weekday != DateTime.saturday &&
+          currentDay.weekday != DateTime.sunday) {
+        nbDays += 1;
+      }
+    }
+    return nbDays;
+  }
+
   void cutiAction(String status, BuildContext context) {
-    var lamaCuti = DateTime.fromMillisecondsSinceEpoch(
-            widget._pengajuan['tanggalSelesaiCuti'])
-        .difference(DateTime.fromMillisecondsSinceEpoch(
-            widget._pengajuan['tanggalMulaiCuti']))
-        .inDays;
+    var lamaCuti = getDifferenceWithoutWeekends(
+        DateTime.fromMillisecondsSinceEpoch(
+            widget._pengajuan['tanggalMulaiCuti']),
+        DateTime.fromMillisecondsSinceEpoch(
+            widget._pengajuan['tanggalSelesaiCuti']));
+
+    // DateTime.fromMillisecondsSinceEpoch(
+    //         widget._pengajuan['tanggalSelesaiCuti'])
+    //     .difference(DateTime.fromMillisecondsSinceEpoch(
+    //         widget._pengajuan['tanggalMulaiCuti']))
+    //     .inDays;
 
     if (disabled == false) {
       setState(() {
@@ -259,13 +278,13 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                             enabled: false,
                             readOnly: true,
                             controller: TextEditingController()
-                              ..text = DateTime.fromMillisecondsSinceEpoch(
-                                          widget
-                                              ._pengajuan['tanggalSelesaiCuti'])
-                                      .difference(DateTime
-                                          .fromMillisecondsSinceEpoch(widget
-                                              ._pengajuan['tanggalMulaiCuti']))
-                                      .inDays
+                              ..text = getDifferenceWithoutWeekends(
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              widget._pengajuan[
+                                                  'tanggalMulaiCuti']),
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              widget._pengajuan[
+                                                  'tanggalSelesaiCuti']))
                                       .toString() +
                                   " hari",
                             decoration: InputDecoration(

@@ -174,12 +174,11 @@ class _RequestFormState extends State<RequestForm> with Validation {
             onTap: () async {
               FocusScope.of(context).requestFocus(new FocusNode());
               DateTime newDateTime = await showRoundedDatePicker(
-                context: context,
-                initialDate: _selectedMulaiCuti,
-                firstDate: DateTime(DateTime.now().year - 1),
-                lastDate: DateTime(DateTime.now().year + 1),
-                borderRadius: 16,
-              );
+                  context: context,
+                  initialDate: _selectedMulaiCuti,
+                  firstDate: DateTime(DateTime.now().year - 1),
+                  lastDate: DateTime(DateTime.now().year + 1),
+                  borderRadius: 16);
               if (newDateTime != null) {
                 _mulaiCutiController.text =
                     DateFormat('dd MMMM yyyy', 'id').format(newDateTime);
