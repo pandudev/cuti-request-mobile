@@ -13,8 +13,14 @@ class _RequestListScreenState extends State<RequestListScreen> {
   Query _db = FirebaseDatabase.instance
       .reference()
       .child('pengajuan')
-      .orderByChild('tahunCuti')
-      .equalTo(DateTime.now().year.toString());
+      .orderByChild('tanggalPengajuan');
+
+  @override
+  void setState(fn) {
+    // TODO: implement setState
+    super.setState(fn);
+    _db.onChildAdded.listen((event) {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +45,8 @@ class _RequestListScreenState extends State<RequestListScreen> {
               if (map != null) {
                 _list = map.values
                     .where((element) =>
-                        element['statusCuti'] == 'menunggu konfirmasi')
+                        element['statusCuti'] == 'menunggu konfirmasi' &&
+                        element['tahunCuti'] == DateTime.now().year.toString())
                     .toList();
               }
 

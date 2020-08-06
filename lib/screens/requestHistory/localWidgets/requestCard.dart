@@ -15,11 +15,12 @@ class RequestCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                DateFormat('dd/MM/yyyy').format(
-                  DateTime.fromMillisecondsSinceEpoch(
-                    data['tanggalPengajuan'],
-                  ),
-                ),
+                DateFormat('dd MMMM yyyy, hh:mm', 'id').format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                        data['tanggalPengajuan'],
+                      ),
+                    ) +
+                    ' WIB',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -104,7 +105,8 @@ class RequestCard extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          DateTime.fromMillisecondsSinceEpoch(
+                          ": " +
+                              DateTime.fromMillisecondsSinceEpoch(
                                       data['tanggalSelesaiCuti'])
                                   .difference(
                                       DateTime.fromMillisecondsSinceEpoch(

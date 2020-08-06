@@ -67,9 +67,10 @@ class _RequestListCardState extends State<RequestListCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                DateFormat('dd/MM/yyyy').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        widget.data['tanggalPengajuan'])),
+                DateFormat('dd MMMM yyyy, hh:mm', 'id').format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                            widget.data['tanggalPengajuan'])) +
+                    ' WIB',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

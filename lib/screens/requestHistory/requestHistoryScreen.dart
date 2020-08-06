@@ -17,8 +17,7 @@ class _RequestHistoryScreenState extends State<RequestHistoryScreen> {
   var _db = FirebaseDatabase.instance
       .reference()
       .child('pengajuan')
-      .orderByChild('tahunCuti')
-      .equalTo(DateTime.now().year.toString());
+      .orderByChild('tanggalPengajuan');
 
   @override
   void initState() {
@@ -67,7 +66,9 @@ class _RequestHistoryScreenState extends State<RequestHistoryScreen> {
               _list.clear();
               if (map != null) {
                 _list = map.values
-                    .where((element) => element['penggunaId'] == _uid)
+                    .where((element) =>
+                        element['penggunaId'] == _uid &&
+                        element['tahunCuti'] == DateTime.now().year.toString())
                     .toList();
               }
 

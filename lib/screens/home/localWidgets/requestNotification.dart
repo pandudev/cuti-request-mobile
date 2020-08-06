@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cuti_flutter_mobile/screens/requestList/requestListScreen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +15,7 @@ class _RequestNotificationState extends State<RequestNotification> {
   Query _db = FirebaseDatabase.instance
       .reference()
       .child('pengajuan')
-      .orderByChild('tahunCuti')
-      .equalTo(DateTime.now().year.toString());
+      .orderByChild('tanggalPengajuan');
 
   void lihatPengajuan(context) {
     if (_list.length > 0) {
@@ -35,6 +36,15 @@ class _RequestNotificationState extends State<RequestNotification> {
         ),
       ));
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _db.onChildAdded.listen((event) {
+      print(event.snapshot.value);
+    });
   }
 
   @override
@@ -84,7 +94,9 @@ class _RequestNotificationState extends State<RequestNotification> {
                             _list = map.values
                                 .where((element) =>
                                     element['statusCuti'] ==
-                                    'menunggu konfirmasi')
+                                        'menunggu konfirmasi' &&
+                                    element['tahunCuti'] ==
+                                        DateTime.now().year.toString())
                                 .toList();
                           }
 
