@@ -196,7 +196,7 @@ class _RequestFormState extends State<RequestForm> with Validation {
                   _selesaiCutiController.text = DateFormat('dd MMMM yyyy', 'id')
                       .format(_selectedSelesaiCuti);
 
-                  if (_jenisCuti == jenisCuti[1]) {
+                  if (_jenisCuti == "Cuti Melahirkan") {
                     _selectedSelesaiCuti = getPregnancyLeaveEnd(newDateTime);
                     _selesaiCutiController.text =
                         DateFormat('dd MMMM yyyy', 'id')
@@ -216,7 +216,7 @@ class _RequestFormState extends State<RequestForm> with Validation {
             showCursor: false,
             readOnly: true,
             onTap: () async {
-              if (_jenisCuti == jenisCuti[1]) {
+              if (_jenisCuti == "Cuti Melahirkan") {
               } else {
                 FocusScope.of(context).requestFocus(new FocusNode());
                 DateTime newDateTime = await showRoundedDatePicker(

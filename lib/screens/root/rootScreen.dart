@@ -69,12 +69,14 @@ class _RootScreenState extends State<RootScreen> {
         _authStatus = AuthStatus.loggedIn;
         _isDirektur =
             _penggunaState.getPengguna.role == 'direktur' ? true : false;
+      });
+      if (_penggunaState.getPengguna.role == 'direktur') {
         FirebaseDatabase.instance
             .reference()
             .child('fcm-token')
             .child(_token)
             .set({'token': _token});
-      });
+      }
     } else {
       setState(() {
         _authStatus = AuthStatus.notLoggedIn;
