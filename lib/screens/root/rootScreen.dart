@@ -4,10 +4,7 @@ import 'package:cuti_flutter_mobile/states/penggunaState.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-enum AuthStatus {
-  loggedIn,
-  notLoggedIn,
-}
+enum AuthStatus { loggedIn, notLoggedIn, loading }
 
 class RootScreen extends StatefulWidget {
   @override
@@ -15,7 +12,7 @@ class RootScreen extends StatefulWidget {
 }
 
 class _RootScreenState extends State<RootScreen> {
-  AuthStatus _authStatus = AuthStatus.notLoggedIn;
+  AuthStatus _authStatus = AuthStatus.loading;
 
   @override
   void didChangeDependencies() async {
@@ -27,9 +24,14 @@ class _RootScreenState extends State<RootScreen> {
     );
 
     String _returnString = await _penggunaState.onStartUp();
+
     if (_returnString == "success") {
       setState(() {
         _authStatus = AuthStatus.loggedIn;
+      });
+    } else {
+      setState(() {
+        _authStatus = AuthStatus.notLoggedIn;
       });
     }
   }
@@ -45,6 +47,13 @@ class _RootScreenState extends State<RootScreen> {
 
       case AuthStatus.loggedIn:
         retVal = HomeScreen();
+        break;
+
+      case AuthStatus.loading:
+        retVal = Container(
+            height: double.infinity,
+            width: double.infinity,
+            child: Center(child: CircularProgressIndicator()));
         break;
 
       default:

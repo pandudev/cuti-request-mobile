@@ -26,8 +26,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
     DateTime currentDay = startDate;
     while (currentDay.isBefore(endDate)) {
       currentDay = currentDay.add(Duration(days: 1));
-      if (currentDay.weekday != DateTime.saturday &&
-          currentDay.weekday != DateTime.sunday) {
+      if (currentDay.weekday != DateTime.sunday) {
         nbDays += 1;
       }
     }
