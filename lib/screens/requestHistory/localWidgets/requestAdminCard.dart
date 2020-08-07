@@ -14,6 +14,18 @@ class RequestAdminCard extends StatefulWidget {
 class _RequestAdminCardState extends State<RequestAdminCard> {
   Pengguna _pengguna = Pengguna();
 
+  int getDifferenceWithoutWeekends(DateTime startDate, DateTime endDate) {
+    int nbDays = 0;
+    DateTime currentDay = startDate;
+    while (currentDay.isBefore(endDate)) {
+      currentDay = currentDay.add(Duration(days: 1));
+      if (currentDay.weekday != DateTime.sunday) {
+        nbDays += 1;
+      }
+    }
+    return nbDays;
+  }
+
   void getPengguna() async {
     FirebaseDatabase.instance
         .reference()
@@ -131,12 +143,11 @@ class _RequestAdminCardState extends State<RequestAdminCard> {
                         flex: 2,
                         child: Text(
                           ': ' +
-                              DateTime.fromMillisecondsSinceEpoch(
-                                      widget.data['tanggalSelesaiCuti'])
-                                  .difference(
+                              getDifferenceWithoutWeekends(
                                       DateTime.fromMillisecondsSinceEpoch(
-                                          widget.data['tanggalMulaiCuti']))
-                                  .inDays
+                                          widget.data['tanggalMulaiCuti']),
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          widget.data['tanggalSelesaiCuti']))
                                   .toString() +
                               " hari",
                           style: TextStyle(

@@ -32,6 +32,20 @@ class _RequestFormState extends State<RequestForm> with Validation {
   DateTime _selectedMulaiCuti = DateTime.now().add(Duration(days: 1));
   DateTime _selectedSelesaiCuti = DateTime.now().add(Duration(days: 2));
 
+  DateTime getPregnancyLeaveEnd(DateTime startDate) {
+    int nbDays = 0;
+    DateTime currentDay = startDate;
+
+    while (nbDays < 90) {
+      currentDay = currentDay.add(Duration(days: 1));
+      if (currentDay.weekday != DateTime.sunday) {
+        nbDays += 1;
+      }
+    }
+
+    return currentDay;
+  }
+
   void submit() async {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
@@ -64,20 +78,7 @@ class _RequestFormState extends State<RequestForm> with Validation {
           canCuti = true;
         }
       } else {
-        if (dif > int.parse(widget._cutiHamil)) {
-          canCuti = false;
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text(
-              'Sisa cuti melahirkan anda tidak cukup!',
-              textAlign: TextAlign.center,
-            ),
-            duration: Duration(
-              seconds: 2,
-            ),
-          ));
-        } else {
-          canCuti = true;
-        }
+        canCuti = true;
       }
 
       if (canCuti) {
@@ -163,6 +164,12 @@ class _RequestFormState extends State<RequestForm> with Validation {
             onChanged: (value) {
               setState(() {
                 _jenisCuti = value;
+                if (_jenisCuti == jenisCuti[1]) {
+                  _selectedSelesaiCuti =
+                      getPregnancyLeaveEnd(_selectedMulaiCuti);
+                  _selesaiCutiController.text = DateFormat('dd MMMM yyyy', 'id')
+                      .format(_selectedSelesaiCuti);
+                }
               });
             },
           ),
@@ -188,6 +195,13 @@ class _RequestFormState extends State<RequestForm> with Validation {
                   _selectedSelesaiCuti = newDateTime.add(Duration(days: 1));
                   _selesaiCutiController.text = DateFormat('dd MMMM yyyy', 'id')
                       .format(_selectedSelesaiCuti);
+
+                  if (_jenisCuti == jenisCuti[1]) {
+                    _selectedSelesaiCuti = getPregnancyLeaveEnd(newDateTime);
+                    _selesaiCutiController.text =
+                        DateFormat('dd MMMM yyyy', 'id')
+                            .format(_selectedSelesaiCuti);
+                  }
                 });
               }
             },
@@ -202,21 +216,24 @@ class _RequestFormState extends State<RequestForm> with Validation {
             showCursor: false,
             readOnly: true,
             onTap: () async {
-              FocusScope.of(context).requestFocus(new FocusNode());
-              DateTime newDateTime = await showRoundedDatePicker(
-                context: context,
-                initialDate: _selectedSelesaiCuti,
-                firstDate: _selectedMulaiCuti.add(Duration(days: 1)),
-                lastDate: DateTime(DateTime.now().year + 1),
-                borderRadius: 16,
-              );
-              if (newDateTime != null) {
-                _selesaiCutiController.text =
-                    DateFormat('dd MMMM yyyy', 'id').format(newDateTime);
+              if (_jenisCuti == jenisCuti[1]) {
+              } else {
+                FocusScope.of(context).requestFocus(new FocusNode());
+                DateTime newDateTime = await showRoundedDatePicker(
+                  context: context,
+                  initialDate: _selectedSelesaiCuti,
+                  firstDate: _selectedMulaiCuti.add(Duration(days: 1)),
+                  lastDate: DateTime(DateTime.now().year + 1),
+                  borderRadius: 16,
+                );
+                if (newDateTime != null) {
+                  _selesaiCutiController.text =
+                      DateFormat('dd MMMM yyyy', 'id').format(newDateTime);
 
-                setState(() {
-                  _selectedSelesaiCuti = newDateTime;
-                });
+                  setState(() {
+                    _selectedSelesaiCuti = newDateTime;
+                  });
+                }
               }
             },
             decoration: InputDecoration(

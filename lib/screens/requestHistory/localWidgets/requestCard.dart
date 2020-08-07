@@ -5,6 +5,18 @@ class RequestCard extends StatelessWidget {
   final dynamic data;
   RequestCard(this.data);
 
+  int getDifferenceWithoutWeekends(DateTime startDate, DateTime endDate) {
+    int nbDays = 0;
+    DateTime currentDay = startDate;
+    while (currentDay.isBefore(endDate)) {
+      currentDay = currentDay.add(Duration(days: 1));
+      if (currentDay.weekday != DateTime.sunday) {
+        nbDays += 1;
+      }
+    }
+    return nbDays;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -106,12 +118,11 @@ class RequestCard extends StatelessWidget {
                         flex: 2,
                         child: Text(
                           ": " +
-                              DateTime.fromMillisecondsSinceEpoch(
-                                      data['tanggalSelesaiCuti'])
-                                  .difference(
+                              getDifferenceWithoutWeekends(
                                       DateTime.fromMillisecondsSinceEpoch(
-                                          data['tanggalMulaiCuti']))
-                                  .inDays
+                                          data['tanggalMulaiCuti']),
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          data['tanggalSelesaiCuti']))
                                   .toString() +
                               " hari",
                           style: TextStyle(

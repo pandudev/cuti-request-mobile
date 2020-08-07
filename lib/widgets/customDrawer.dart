@@ -5,6 +5,7 @@ import 'package:cuti_flutter_mobile/screens/requestHistory/requestHistoryScreen.
 import 'package:cuti_flutter_mobile/screens/root/rootScreen.dart';
 import 'package:cuti_flutter_mobile/screens/setting/settingScreen.dart';
 import 'package:cuti_flutter_mobile/states/penggunaState.dart';
+import 'package:cuti_flutter_mobile/utils/config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +33,7 @@ class CustomDrawer extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'PT. NAMA PERUSAHAAN',
+                  Config().getPerusahaan,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,

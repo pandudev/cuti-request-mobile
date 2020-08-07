@@ -40,11 +40,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
         DateTime.fromMillisecondsSinceEpoch(
             widget._pengajuan['tanggalSelesaiCuti']));
 
-    // DateTime.fromMillisecondsSinceEpoch(
-    //         widget._pengajuan['tanggalSelesaiCuti'])
-    //     .difference(DateTime.fromMillisecondsSinceEpoch(
-    //         widget._pengajuan['tanggalMulaiCuti']))
-    //     .inDays;
+    print(lamaCuti);
 
     if (disabled == false) {
       setState(() {
