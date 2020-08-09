@@ -1,10 +1,13 @@
 import 'package:cuti_flutter_mobile/models/penggunaModel.dart';
 import 'package:cuti_flutter_mobile/services/penggunaService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class PenggunaState extends ChangeNotifier {
   Pengguna _pengguna = Pengguna();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   Pengguna get getPengguna => _pengguna;
 
@@ -40,6 +43,27 @@ class PenggunaState extends ChangeNotifier {
       _pengguna = await PenggunaService().getPengguna(_authResult.user.uid);
 
       if (_pengguna != null) {
+        _firebaseMessaging.getToken().then((_token) => {
+              if (_pengguna.role == 'direktur')
+                {
+                  print('direktur'),
+                  FirebaseDatabase.instance
+                      .reference()
+                      .child('fcm-token')
+                      .child('direktur/' + _pengguna.uid)
+                      .set({'token': _token})
+                }
+              else
+                {
+                  print('pegawai'),
+                  FirebaseDatabase.instance
+                      .reference()
+                      .child('fcm-token')
+                      .child('pegawai/' + _pengguna.uid)
+                      .set({'token': _token})
+                }
+            });
+
         retVal = "success";
       }
     } catch (e) {
@@ -53,8 +77,23 @@ class PenggunaState extends ChangeNotifier {
     String retVal = "error";
 
     try {
+      if (_pengguna.role == 'direktur') {
+        FirebaseDatabase.instance
+            .reference()
+            .child('fcm-token')
+            .child('direktur/' + _pengguna.uid)
+            .remove();
+      } else {
+        FirebaseDatabase.instance
+            .reference()
+            .child('fcm-token')
+            .child('pegawai/' + _pengguna.uid)
+            .remove();
+      }
+
       await _auth.signOut();
       _pengguna = Pengguna();
+
       retVal = "success";
     } catch (e) {
       print(e);

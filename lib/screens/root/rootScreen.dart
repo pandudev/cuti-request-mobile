@@ -1,7 +1,6 @@
 import 'package:cuti_flutter_mobile/screens/home/homeScreen.dart';
 import 'package:cuti_flutter_mobile/screens/login/loginScreen.dart';
 import 'package:cuti_flutter_mobile/states/penggunaState.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,8 +15,6 @@ class RootScreen extends StatefulWidget {
 class _RootScreenState extends State<RootScreen> {
   AuthStatus _authStatus = AuthStatus.loading;
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  bool _isDirektur = false;
-  String _token = "";
 
   @override
   void initState() {
@@ -38,19 +35,10 @@ class _RootScreenState extends State<RootScreen> {
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(alert: true, badge: true, sound: true));
 
-    updateToken(String token) {
-      print(token);
-      setState(() {
-        _token = token;
-      });
-    }
-
     _firebaseMessaging.onIosSettingsRegistered
         .listen((IosNotificationSettings settings) {
       print('ios setting registered');
     });
-
-    _firebaseMessaging.getToken().then((token) => {updateToken(token)});
   }
 
   @override
@@ -67,16 +55,7 @@ class _RootScreenState extends State<RootScreen> {
     if (_returnString == "success") {
       setState(() {
         _authStatus = AuthStatus.loggedIn;
-        _isDirektur =
-            _penggunaState.getPengguna.role == 'direktur' ? true : false;
       });
-      if (_penggunaState.getPengguna.role == 'direktur') {
-        FirebaseDatabase.instance
-            .reference()
-            .child('fcm-token')
-            .child(_token)
-            .set({'token': _token});
-      }
     } else {
       setState(() {
         _authStatus = AuthStatus.notLoggedIn;
